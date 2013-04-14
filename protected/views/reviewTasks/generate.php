@@ -1,0 +1,77 @@
+ <?php
+ $this->breadcrumbs=array(
+	 'Review Tasks'=>array('index'),
+	 'Generate',
+ );
+
+// $this->menu=array(
+	// array('label'=>'List ReviewTaskCoverage', 'url'=>array('index')),
+	// array('label'=>'Create ReviewTaskCoverage', 'url'=>array('create')),
+// );
+
+// Yii::app()->clientScript->registerScript('search', "
+// $('.search-button').click(function(){
+	// $('.search-form').toggle();
+	// return false;
+// });
+// $('.search-form form').submit(function(){
+	// $.fn.yiiGridView.update('review-task-coverage-grid', {
+		// data: $(this).serialize()
+	// });
+	// return false;
+// });
+// ");
+// ?>
+
+<h1>Generate Review Tasks for projects</h1>
+
+<p>
+You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>
+or <b>=</b>) at the beginning of each of your search values to specify how the comparison should be done.
+</p>
+
+<?php echo CHtml::link('Advanced Search','#',array('class'=>'search-button')); ?>
+<div class="search-form" style="display:none">
+<?php $this->renderPartial('_search',array(
+	'model'=>$model,
+)); ?>
+</div><!-- search-form -->
+<?php $this->widget('zii.widgets.grid.CGridView', array(
+	'id'=>'review-tasks-grid',
+	'dataProvider'=>$model->search(),
+	'filter'=>$model,
+	'selectableRows'=>2,
+	'columns'=>array(
+		'code',
+		array(
+		'id'=>'chk',
+		'class'=>'CCheckBoxColumn',
+		),
+		'description',
+		array(
+		'name'=>'isactive',
+		'header'=>'Active',
+		'value'=>'Lookup::itemStatus($data->isactive)',
+		),
+		'review_types.description',
+		'long_description',
+		array(
+			'class'=>'CButtonColumn',
+		),
+	),
+)); ?>
+
+
+<script>
+function reloadGrid(data) {
+    $.fn.yiiGridView.update('review-task-coverage-grid');
+}
+</script>
+
+<?php //echo CHtml::ajaxSubmitButton('Generate task reviews',array('Review/generateReviews','act'=>'generate'),array('type'=>'POST','data'=>"js:{chk:$.fn.yiiGridView.getSelection('review-task-coverage-grid')}"), array('success'=>'reloadGrid')); ?>
+<?php echo CHtml::ajaxSubmitButton('Generate task reviews2',array('ReviewTasks/generateReviews','act'=>'generate'),array('type'=>'POST','data'=>"js:{chk:$.fn.yiiGridView.getSelection('review-tasks-grid')}", 'success'=>'reloadGrid')); ?>
+<?php echo CHtml::ajaxSubmitButton('Delete task reviews',array('ReviewTasks/generateReviews','act'=>'delete'), array('success'=>'reloadGrid')); ?>
+
+
+
+
